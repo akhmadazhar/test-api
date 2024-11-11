@@ -18,11 +18,13 @@
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
-                        @foreach ($errors->all() as $item)
-                            <ul>
+
+                        <ul>
+                            @foreach ($errors->all() as $item)
                                 <li>{{ $item }}</li>
-                            </ul>
-                        @endforeach
+                            @endforeach
+                        </ul>
+
                     </div>
                 @endif
 

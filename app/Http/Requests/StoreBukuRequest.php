@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreBukuRequest extends FormRequest
 {
@@ -21,5 +23,13 @@ class StoreBukuRequest extends FormRequest
             'pengarang' => 'required',
             'tanggal_terbit' => 'required',
         ];
+    }
+protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'status' => false,
+            'message' => 'Data Gagal Disimpan',
+            'errors' => $validator->errors()
+        ], 422));
     }
 }
