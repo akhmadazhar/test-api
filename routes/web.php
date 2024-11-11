@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('buku',[BukuController::class,'index']);
+Route::post('buku',[BukuController::class,'store']);

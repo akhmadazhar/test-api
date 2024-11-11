@@ -15,6 +15,24 @@
         <!-- START FORM -->
         <div class="my-3 p-3 bg-body rounded shadow-sm">
             <form action='' method='post'>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach ($errors->all() as $item)
+                            <ul>
+                                <li>{{ $item }}</li>
+                            </ul>
+                        @endforeach
+                    </div>
+                @endif
+
+                @if (session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ success }}
+                    </div>
+                @endif
+
+                @csrf
                 <div class="mb-3 row">
                     <label for="judul" class="col-sm-2 col-form-label">Judul Buku</label>
                     <div class="col-sm-10">
@@ -28,9 +46,9 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="tanggal_publikasi" class="col-sm-2 col-form-label">Tanggal Publikasi</label>
+                    <label for="tanggal_terbit" class="col-sm-2 col-form-label">Tanggal Terbit</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control w-50" name='tanggal_publikasi' id="tanggal_publikasi">
+                        <input type="date" class="form-control w-50" name='tanggal_terbit' id="tanggal_terbit">
                     </div>
                 </div>
                 <div class="mb-3 row">
