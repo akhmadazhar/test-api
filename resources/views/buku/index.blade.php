@@ -30,27 +30,34 @@
 
                 @if (session()->has('success'))
                     <div class="alert alert-success">
-                        {{ success }}
+                        {{ session('success') }}
                     </div>
                 @endif
 
+
+                @if (Route::current()->uri == 'buku/{id}')
+                    @method('PUT')
+                @endif
                 @csrf
                 <div class="mb-3 row">
                     <label for="judul" class="col-sm-2 col-form-label">Judul Buku</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name='judul' id="judul">
+                        <input type="text" class="form-control" name='judul' id="judul"
+                            value="{{ isset($data['judul']) ? $data['judul'] : old('judul') }}">
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label for="nama" class="col-sm-2 col-form-label">Pengarang</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name='pengarang' id="pengarang">
+                        <input type="text" class="form-control" name='pengarang' id="pengarang"
+                            value="{{ isset($data['pengarang']) ? $data['pengarang'] : old('pengarang') }}">
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label for="tanggal_terbit" class="col-sm-2 col-form-label">Tanggal Terbit</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control w-50" name='tanggal_terbit' id="tanggal_terbit">
+                        <input type="date" class="form-control w-50" name='tanggal_terbit' id="tanggal_terbit"
+                            value="{{ isset($data['tanggal_terbit']) ? $data['tanggal_terbit'] : old('tanggal_terbit') }}">
                     </div>
                 </div>
                 <div class="mb-3 row">
@@ -63,34 +70,43 @@
         <!-- AKHIR FORM -->
 
         <!-- START DATA -->
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="col-md-1">No</th>
-                        <th class="col-md-4">Judul</th>
-                        <th class="col-md-3">Pengarang</th>
-                        <th class="col-md-2">Tanggal Publikasi</th>
-                        <th class="col-md-2">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($data as $item)
+        @if (Route::current()->uri == 'buku')
+            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item['judul'] }}</td>
-                            <td>{{ $item['pengarang'] }}</td>
-                            <td>{{ $item['tanggal_terbit'] }}</td>
-                            <td>
-                                <a href="" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="" class="btn btn-danger btn-sm">Del</a>
-                            </td>
+                            <th class="col-md-1">No</th>
+                            <th class="col-md-4">Judul</th>
+                            <th class="col-md-3">Pengarang</th>
+                            <th class="col-md-2">Tanggal Publikasi</th>
+                            <th class="col-md-2">Aksi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($data as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item['judul'] }}</td>
+                                <td>{{ $item['pengarang'] }}</td>
+                                <td>{{ $item['tanggal_terbit'] }}</td>
+                                <td>
+                                    <a href="{{ url('buku/' . $item['id']) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ url('buku/' . $item['id']) }}" method="POST" class="d-inline"
+                                        onsubmit="return confirm('Yakin?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" name="submit"
+                                            class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-        </div>
+            </div>
+        @endif
+
         <!-- AKHIR DATA -->
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"

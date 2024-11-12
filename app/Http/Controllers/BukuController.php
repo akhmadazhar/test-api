@@ -48,22 +48,20 @@ class BukuController extends Controller
         ];
 
         $client = new Client();
-        $url = "http://127.0.0.1:8000/api/buku";
-        $response = $client->request('POST', $url,[
-            'headers' =>
-            ['Content-type' => 'application/json'],
+        $url = 'http://127.0.0.1:8000/api/buku';
+        $response = $client->request('POST',$url,[
+            'headers' => ['Content-type' => 'application/json'],
             'body' => json_encode($parameter)
         ]);
         $content = $response->getBody()->getContents();
-        $contentArray = json_decode($content, true);
+        $contentArray = json_decode($content,true);
+        $data = $contentArray;
 
-        if ($contentArray['status'] != true) {
-            $error = $contentArray['data'];
-            return redirect()->to('buku')->withErrors($error);
-        } else {
-            return redirect()->to('buku')->with('success', 'Berhasil Menambahkan Data');
+        if($data['status'] != true){
+            $error = $data['data'];
+            return redirect()->to('buku')->withErrors($error)->withInput();
         }
-
+        return redirect()->to('buku')->with('success','Data Berhasil Disimpan');
 
     }
 
@@ -72,7 +70,7 @@ class BukuController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
@@ -80,7 +78,19 @@ class BukuController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $client = new Client();
+        $url = "http://127.0.0.1:8000/api/buku/$id";
+        $response = $client->request('GET',$url);
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content,true);
+        if($contentArray['status']!=true){
+            $error = $contentArray['message'];
+            return redirect()->to('buku')->withErrors($error);
+        } else {
+            $data = $contentArray['data'];
+            return view('buku.index', ['data' => $data]);
+        }
+
     }
 
     /**
@@ -88,7 +98,32 @@ class BukuController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $judul = $request->judul;
+        $pengarang = $request->pengarang;
+        $tanggal_terbit = $request->tanggal_terbit;
+
+        $parameter = [
+            'judul' => $judul,
+            'pengarang' => $pengarang,
+            'tanggal_terbit' => $tanggal_terbit,
+        ];
+
+        $client = new Client();
+        $url = "http://127.0.0.1:8000/api/buku/$id";
+        $response = $client->request('PUT',$url,[
+            'headers' => ['Content-type' => 'application/json'],
+            'body' => json_encode($parameter)
+        ]);
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content,true);
+        $data = $contentArray;
+
+        if($data['status'] != true){
+            $error = $data['data'];
+            return redirect()->to('buku')->withErrors($error)->withInput();
+        }
+        return redirect()->to('buku')->with('success','Data Berhasil Diupdate');
+
     }
 
     /**
@@ -96,6 +131,17 @@ class BukuController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+$client = new Client();
+        $url = "http://127.0.0.1:8000/api/buku/$id";
+        $response = $client->request('DELETE',$url);
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content,true);
+        $data = $contentArray;
+
+        if($data['status'] != true){
+            $error = $data['data'];
+            return redirect()->to('buku')->withErrors($error)->withInput();
+        }
+        return redirect()->to('buku')->with('success','Data Berhasil Di Hapus');
     }
 }

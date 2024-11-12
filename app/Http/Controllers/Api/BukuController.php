@@ -32,7 +32,12 @@ class BukuController extends Controller
      */
     public function store(Request $request)
     {
+
         $dataBuku = new Buku();
+
+        $dataBuku->judul = $request->judul;
+        $dataBuku->pengarang = $request->pengarang;
+        $dataBuku->tanggal_terbit = $request->tanggal_terbit;
 
         $rules = [
             'judul' => 'required',
@@ -40,32 +45,23 @@ class BukuController extends Controller
             'tanggal_terbit' => 'required',
         ];
 
-        $dataBuku->judul = $request->judul;
-        $dataBuku->pengarang = $request->pengarang;
-        $dataBuku->tanggal_terbit = $request->tanggal_terbit;
+        $validator = Validator::make($request->all(),$rules);
 
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()){
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => 'Data Gagal Disimpan',
-                    'data' => $validator->errors(),
-                ],
-            );
+        if($validator->fails())
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data Gagal Disimpan',
+                'data' => $validator->errors()
+            ]);
         }
 
         $post = $dataBuku->save();
         if ($post) {
-            return response()->json(
-                [
-                    'status' => true,
-                    'message' => 'Data Berhasil Disimpan',
-                    'data' => $post,
-                ],
-                200,
-            );
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Berhasil Disimpan',
+            ]);
         }
 
 
