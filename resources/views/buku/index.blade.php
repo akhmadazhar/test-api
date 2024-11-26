@@ -83,9 +83,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $item)
+                        <?php $i = $data['from']; ?>
+                        @foreach ($data['data'] as $item)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $i++ }}</td>
                                 <td>{{ $item['judul'] }}</td>
                                 <td>{{ $item['pengarang'] }}</td>
                                 <td>{{ $item['tanggal_terbit'] }}</td>
@@ -103,7 +104,16 @@
                         @endforeach
                     </tbody>
                 </table>
-
+                @if ($data['links'])
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            @foreach ($data['links'] as $link)
+                                <li class="page-item"><a class="page-link" href="{{ $link['url2'] }}">
+                                        {!! $link['label'] !!}</a></li>
+                            @endforeach
+                        </ul>
+                    </nav>
+                @endif
             </div>
         @endif
 
